@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#24473F">
+<meta name="theme-color" content="#193E34">
 <meta name="ghg-build" content="2026-09-29-v7-test-weekend-pickup-delivery">
 <title>GHG | Online Ordering</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2716%27 fill=%27%2324473F%27/%3E%3Ctext x=%2732%27 y=%2741%27 text-anchor=%27middle%27 font-size=%2721%27 font-family=%27Arial%27 font-weight=%27800%27 fill=%27%23FFF8EF%27%3EGHG%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
 :root{--p:#24473F;--p2:#315E52;--y:#D87750;--cream:#FFF8EF;--sand:#F3E7D7;--sage:#DCE5DD;--ink:#2D2925;--muted:#746A61;--line:#E8DCCF;--white:#fff;--shadow:0 22px 70px rgba(43,55,48,.13)}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);background:var(--cream)}button,input,textarea,select{font:inherit}button{cursor:pointer}.wrap{width:min(1180px,calc(100% - 30px));margin:auto}
@@ -48,6 +48,46 @@ footer{background:#1d3933;color:#e9f0ec;padding:30px 0}footer .wrap{display:flex
 .choice{grid-template-columns:1fr}
 nav .ghost{display:none}
 }
+
+/* GHG Christmas palette, approved 2026-11-15 — visual-only: no checkout logic changed. */
+:root {
+ --p:#193E34;--p2:#2B5B4D;--y:#963847;--cream:#FBF6EC;
+ --sand:#F1E7D9;--sage:#DBE7DD;--ink:#292721;--muted:#746B5D;
+ --line:#E2D4C0;--white:#FFFDFA;--shadow:0 22px 70px rgba(32,53,42,.14);
+}
+body{background:var(--cream)}
+.top{background:#173B31;color:#F9E7B9;border-bottom:2px solid #D8B669}
+header{background:rgba(251,246,236,.96);border-color:#DBC9A8}
+.mark{background:var(--p);color:#E6C470;border:1px solid #B99853}
+.brand strong{color:#1E463A}
+.hero{background:radial-gradient(circle at 82% 20%,rgba(159,50,68,.09),transparent 28%),linear-gradient(180deg,#FFFBF5,var(--cream))}
+.hero-main{box-shadow:0 24px 70px rgba(23,49,38,.2)}
+.hero-main:before{background:linear-gradient(90deg,rgba(15,37,28,.7) 0%,rgba(25,31,23,.49) 44%,rgba(0,0,0,.19) 78%,rgba(0,0,0,.07) 100%)}
+.kick{color:#E7C377}
+.info{background:#FFFCF7;border-color:#E0D0B8}
+.info h2{color:#254738}
+.step{background:#F9F2E7;border-color:#EBDECC}
+.num{background:#DDE9DF;border:1px solid #C2D3C5;color:#1A4939}
+.primary{background:#193E34;color:#FFFAED}
+.accent-btn{background:#963847;color:#fff}
+.btn.accent-btn:hover{background:#862C3B}
+.count{background:#963847}
+.eyebrow{color:#A13B47}
+.menu{background:#F4EBDE;border-color:#E2D4C0}
+.tab{background:#FFFCF7;border-color:#E1D1BA}
+.tab.active{background:#193E34;color:#FFF9EE}
+.card{background:#FFFDF8;border-color:#DFD1BD;box-shadow:0 9px 26px rgba(62,63,40,.05)}
+.card h3{color:#244739}
+.accent{background:#BF8C43}
+.price{color:#963847}
+.future{background:#FBF6EC}
+.future-card{background:#FFFCF7;border-color:#E1D3BD}
+.future-tag{background:#EBE3D4;color:#655342}
+footer{background:#173B31;color:#F8EED9;border-top:3px solid #C8A65D}
+footer a{color:#E5C779}
+.panel,.bcard{background:#FFFBF5}
+.summary{background:#F3E7D9}
+
 </style>
 <script>
 (function(){
