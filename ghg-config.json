@@ -1,0 +1,55 @@
+{
+  "project": "Gordo Hospitality Group / GHG",
+  "tenant_slug": "gordo-hospitality-group",
+  "menu_strategy": "Rotating active menu. The storefront must remain concept-neutral and display the currently active menu from the ordering backend.",
+  "backend_project_ref": "hhgzlvcdoinopqnjlcfi",
+  "currency": "AWG / Afl.",
+  "timezone": "America/Aruba",
+  "brand": {
+    "primary": "#24473F",
+    "secondary": "#FFF8EF",
+    "accent": "#D87750",
+    "support": "#DCE5DD"
+  },
+  "moonlight_credit_url": "https://moonlightaruba.com/",
+  "staff_routes": [
+    "/admin/",
+    "/kitchen/",
+    "/front/",
+    "/driver/"
+  ],
+  "note": "Same Supabase backend, isolated by tenant slug and staff membership. Public storefront copy is menu-neutral because GHG periodically rotates active concepts such as SAKO and Pasta To Go.",
+  "features": {
+    "payment_module": true,
+    "cash_drawer": true,
+    "payment_methods_live": [
+      "cash",
+      "card"
+    ],
+    "delivery": true,
+    "pickup_only": false
+  },
+  "test_weekend": {
+    "dates": [
+      "2026-10-02",
+      "2026-10-03"
+    ],
+    "same_day_only": true,
+    "pickup": {
+      "window": "18:00-23:00",
+      "interval_minutes": 15,
+      "capacity_per_interval": 3
+    },
+    "delivery": {
+      "windows": [
+        "19:00-19:30",
+        "20:00-20:30",
+        "21:00-21:30",
+        "22:00-22:30"
+      ],
+      "capacity_per_batch": 5,
+      "cutoff_minutes_before_departure": 15,
+      "delivery_fee": 0
+    }
+  }
+}
