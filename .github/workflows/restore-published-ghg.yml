@@ -1,9 +1,8 @@
 name: Recover original published GHG website
 
+# Recovery has already completed successfully. Run only manually if intentionally
+# restoring the Oct 26 originals. Never auto-restore on routine commits.
 on:
-  push:
-    paths:
-      - .github/workflows/restore-published-ghg.yml
   workflow_dispatch:
 
 permissions:
