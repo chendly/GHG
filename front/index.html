@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#24473F">
+<title>Front of House | Gordo Hospitality Group</title>
+<style>
+:root{
+  --p:#24473F;--y:#D87750;--ink:#2D2925;--muted:#726978;--bg:#F7F1E8;
+  --card:#fff;--line:#E7DDEB;--green:#177447;--greenbg:#E8F7EF;--blue:#285F9E;
+  --bluebg:#EAF3FF;--shadow:0 12px 32px rgba(56,24,73,.08)
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}
+button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.login-shell{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 20% 10%,rgba(216,119,80,.20),transparent 28%),linear-gradient(145deg,#183A33,#315E52)}
+.login-card{width:min(440px,100%);background:#fff;border-radius:28px;padding:30px;box-shadow:0 30px 90px rgba(20,8,27,.25)}
+.logo{width:58px;height:58px;border-radius:18px;background:var(--p);color:var(--y);display:grid;place-items:center;font-weight:950;margin-bottom:22px}
+.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:11px;font-weight:900;color:var(--p)}
+.login-card h1{font-size:34px;letter-spacing:-.04em;margin:8px 0 8px}.login-card p{color:var(--muted);line-height:1.55;margin:0 0 22px}
+label{display:block;font-weight:850;font-size:13px;margin:15px 0 7px}
+input{width:100%;border:1px solid #dcd0e2;border-radius:13px;padding:13px 14px;outline:none}
+input:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(91,27,132,.08)}
+.btn{border:0;border-radius:13px;padding:12px 16px;font-weight:900}.btn-primary{background:var(--p);color:#fff}.btn-light{background:#fff;border:1px solid var(--line);color:var(--p)}
+.login-card .btn-primary{width:100%;margin-top:19px;padding:14px}
+.error{background:#fff0f0;border:1px solid #efd1d1;color:#943d3d;border-radius:12px;padding:11px 13px;margin-top:14px;font-size:13px}
+header{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line)}
+.header-inner{max-width:1500px;margin:auto;padding:13px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:12px}.mini-logo{width:43px;height:43px;border-radius:13px;background:var(--p);color:var(--y);display:grid;place-items:center;font-weight:950}
+.brand strong{display:block}.brand small{display:block;color:var(--muted);margin-top:2px}
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.live{display:flex;align-items:center;gap:7px;color:var(--green);font-size:12px;font-weight:900}.live i{width:8px;height:8px;border-radius:50%;background:#2aa45e;box-shadow:0 0 0 4px rgba(42,164,94,.12)}
+main{max-width:1500px;margin:auto;padding:22px 20px 55px}
+.title-row{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:18px}.title-row h1{font-size:34px;letter-spacing:-.04em;margin:4px 0 0}.title-row p{color:var(--muted);margin:0}
+.alert{display:none;align-items:center;justify-content:space-between;gap:15px;background:var(--y);padding:14px 17px;border-radius:15px;margin-bottom:16px;font-weight:950;box-shadow:var(--shadow)}
+.alert.show{display:flex}
+.section-title{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:23px 0 11px}.section-title h2{font-size:23px;margin:0}.section-title p{margin:0;color:var(--muted);font-size:13px}
+.ready-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.ready-card{background:#fff;border:2px solid #bfe5cf;border-radius:22px;overflow:hidden;box-shadow:var(--shadow)}
+.ready-card.delivery{border-color:#bfd7f4}
+.ready-top{padding:17px 18px 14px;background:var(--greenbg);display:flex;justify-content:space-between;align-items:start;gap:12px}.ready-card.delivery .ready-top{background:var(--bluebg)}
+.ready-label{font-size:12px;font-weight:950;letter-spacing:.08em;text-transform:uppercase;color:var(--green)}.ready-card.delivery .ready-label{color:var(--blue)}
+.call-number{font-size:36px;letter-spacing:.02em;font-weight:1000;margin-top:5px;line-height:1}
+.full-number{font-size:11px;color:var(--muted);margin-top:7px;font-weight:800}
+.ready-time{text-align:right;font-size:18px;font-weight:950}
+.ready-body{padding:16px 18px}.handoff{font-weight:900;font-size:14px;margin-bottom:10px}.handoff span{color:var(--muted);font-weight:700}
+.order-summary{border-top:1px dashed #ddd1e2;padding-top:11px}.itemline{font-size:13px;padding:4px 0}.itemline b{color:var(--p)}.handoff-btn{width:100%;margin-top:14px;border:0;border-radius:13px;padding:13px 15px;font-weight:950;background:var(--p);color:#fff}.ready-card.delivery .handoff-btn{background:var(--blue)}.handoff-btn:disabled{opacity:.55;cursor:wait}
+.progress-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.progress-card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:14px 15px}
+.progress-head{display:flex;justify-content:space-between;gap:8px;align-items:start}.progress-no{font-size:15px;font-weight:950}.progress-time{font-weight:950}
+.status{display:inline-block;margin-top:8px;padding:5px 8px;border-radius:999px;background:#eee5f4;color:var(--p);font-size:10px;text-transform:uppercase;letter-spacing:.05em;font-weight:950}
+.status.preparing{background:#fff0d9;color:#8a4d0f}.status.new{background:#fff6c9;color:#725c06}.status.confirmed{background:#eee5f4;color:var(--p)}
+.progress-meta{color:var(--muted);font-size:12px;margin-top:8px}
+.empty{grid-column:1/-1;text-align:center;background:#fff;border:1px dashed #d9cde0;border-radius:20px;padding:46px 20px;color:var(--muted)}
+.empty strong{display:block;color:var(--ink);font-size:20px;margin-bottom:6px}
+.staff-line{font-size:12px;color:var(--muted);margin-top:3px}
+.drawer-strip{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin-bottom:16px;box-shadow:var(--shadow)}
+.drawer-stats{display:flex;gap:18px;flex-wrap:wrap}.drawer-stat small{display:block;color:var(--muted);font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.06em}.drawer-stat b{display:block;font-size:17px;margin-top:3px}.drawer-actions{display:flex;gap:7px;flex-wrap:wrap}
+.pay-chip{display:inline-flex;align-items:center;border-radius:999px;padding:6px 9px;font-size:10px;font-weight:950;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}.pay-chip.unpaid{background:#FFF0DC;color:#8A4D0F}.pay-chip.paid{background:#E1F4E8;color:#1D7045}.pay-chip.card{background:#EAF3FF;color:#285F9E}.pay-chip.cash{background:#E8F7EF;color:#177447}
+.payment-btn{background:var(--y)!important;color:#fff!important}.paid-handoff{background:var(--p)!important}
+.pay-modal-back{position:fixed;inset:0;background:rgba(20,35,31,.56);z-index:100;display:grid;place-items:center;padding:18px}.pay-modal{width:min(520px,100%);background:#fff;border-radius:22px;box-shadow:0 30px 90px rgba(20,30,27,.25);overflow:hidden}.pay-modal-head{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;align-items:center}.pay-modal-head h3{margin:0}.pay-modal-body{padding:18px}.pay-modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:14px 18px;border-top:1px solid var(--line)}.pay-methods{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.pay-method{border:2px solid var(--line);background:#fff;border-radius:15px;padding:16px;text-align:left;font-weight:950}.pay-method.on{border-color:var(--p);background:#F2F7F4}.change-box{background:#F2F7F4;border-radius:13px;padding:12px;margin-top:10px}.change-box strong{font-size:22px;display:block;margin-top:2px}
+@media(max-width:1100px){.ready-grid{grid-template-columns:repeat(2,1fr)}.progress-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.drawer-strip{grid-template-columns:1fr}.ready-grid,.progress-grid{grid-template-columns:1fr}.title-row{align-items:flex-start;flex-direction:column}.header-inner{align-items:flex-start}.header-actions{justify-content:flex-end}.call-number{font-size:31px}}
+@media(max-width:500px){main{padding:16px 11px 40px}.header-inner{padding:11px}.brand small{display:none}.btn-label{display:none}}
+</style>
+</head>
+<body>
+<section id="loginView" class="login-shell">
+  <div class="login-card">
+    <div class="logo">GHG</div>
+    <div class="eyebrow">Staff access</div>
+    <h1>Front of House</h1>
+    <p>Sign in to manage today’s order handoffs. Front staff can only complete orders that the kitchen has marked ready.</p>
+    <form id="loginForm">
+      <label>Email</label>
+      <input id="email" type="email" autocomplete="username" required placeholder="staff@email.com">
+      <label>Password</label>
+      <input id="password" type="password" autocomplete="current-password" required placeholder="••••••••">
+      <button class="btn btn-primary" id="loginBtn" type="submit">Sign in</button>
+      <div id="loginError" class="error hidden"></div>
+    </form>
+  </div>
+</section>
+
+<div id="appView" class="hidden">
+<header>
+  <div class="header-inner">
+    <div class="brand"><div class="mini-logo">GHG</div><div><strong id="tenantName">Gordo Hospitality Group</strong><small>Front of House</small></div></div>
+    <div class="header-actions">
+      <span class="live"><i></i> AUTO REFRESH</span>
+      <button class="btn btn-light" id="soundBtn" onclick="toggleSound()">🔔 <span class="btn-label">Enable sound</span></button>
+      <button class="btn btn-light" onclick="loadOrders()">↻ <span class="btn-label">Refresh</span></button>
+      <button class="btn btn-light" onclick="logout()">Sign out</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="title-row">
+    <div><div class="eyebrow">Order handoff</div><h1>Front counter</h1></div>
+    <div><p id="todayLabel"></p><div class="staff-line" id="staffLine"></div></div>
+  </div>
+
+  <div class="alert" id="readyAlert"><span>🔔 Order ready to call</span><strong id="readyAlertNo"></strong></div>
+  <div id="drawerStrip" class="drawer-strip hidden"></div>
+
+  <div class="section-title">
+    <div><div class="eyebrow">Ready now</div><h2>Call these order numbers</h2></div>
+    <p id="refreshText">Waiting for orders…</p>
+  </div>
+  <div class="ready-grid" id="readyOrders"></div>
+
+  <div class="section-title">
+    <div><div class="eyebrow">Still being prepared</div><h2>In progress</h2></div>
+    <p>Kitchen controls preparation. Front only completes ready handoffs.</p>
+  </div>
+  <div class="progress-grid" id="progressOrders"></div>
+</main>
+</div>
+<div id="payModalRoot"></div>
+
+<script>
+const SUPABASE_URL="https://hhgzlvcdoinopqnjlcfi.supabase.co";
+const PUBLISHABLE_KEY="sb_publishable_ESxt4gggtkeRxqLB9wgUoQ_9O3Z88TG";
+const TENANT="gordo-hospitality-group";
+const API=`${SUPABASE_URL}/functions/v1/kitchen-api`;
+const SESSION_KEY=`moonlight-front-${TENANT}`;
+let session=null,orders=[],tenant=null,polling=null,firstLoad=true,readyKnown=new Set(),soundEnabled=false,audioCtx=null,paymentData=null,payMethod="cash";
+const $=id=>document.getElementById(id);
+
+function saveSession(d){session={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:Math.floor(Date.now()/1000)+Number(d.expires_in||3600)};localStorage.setItem(SESSION_KEY,JSON.stringify(session))}
+function readSession(){try{session=JSON.parse(localStorage.getItem(SESSION_KEY)||"null")}catch{session=null}return session}
+async function refreshSession(){
+  if(!session?.refresh_token)throw new Error("No session");
+  const r=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`,{method:"POST",headers:{"Content-Type":"application/json",apikey:PUBLISHABLE_KEY},body:JSON.stringify({refresh_token:session.refresh_token})});
+  const d=await r.json();if(!r.ok)throw new Error(d.error_description||d.msg||"Session expired");saveSession(d)
+}
+async function token(){if(!session)throw new Error("Sign in required");if((session.expires_at||0)-Math.floor(Date.now()/1000)<90)await refreshSession();return session.access_token}
+async function apiFetch(opts={}){
+  const t=await token();
+  const r=await fetch(`${API}?tenant=${encodeURIComponent(TENANT)}&screen=front`,{
+    ...opts,
+    headers:{...(opts.headers||{}),Authorization:`Bearer ${t}`,"Content-Type":"application/json"}
+  });
+  const d=await r.json().catch(()=>({}));
+  if(r.status===401){try{await refreshSession();return apiFetch(opts)}catch{await logout(false);throw new Error("Session expired")}}
+  if(!r.ok)throw new Error(d.error||"Front counter service unavailable");return d
+}
+async function rpc(name,payload={}){
+  const t=await token();
+  const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`,{method:"POST",headers:{Authorization:`Bearer ${t}`,apikey:PUBLISHABLE_KEY,"Content-Type":"application/json"},body:JSON.stringify(payload)});
+  const d=await r.json().catch(()=>({}));
+  if(r.status===401){await refreshSession();return rpc(name,payload)}
+  if(!r.ok)throw new Error(d.message||d.error||"Payment service unavailable");
+  return d
+}
+function money(n){return `${tenant?.currency_symbol||"Afl."} ${Number(n||0).toFixed(2)}`}
+function completedPayment(orderId){return (paymentData?.payments||[]).find(p=>p.order_id===orderId&&p.status==="completed")}
+function todayPayments(){return (paymentData?.payments||[]).filter(p=>p.business_date===paymentData?.business_date&&p.status==="completed")}
+function payLabel(p){return p?.method==="cash"?"Cash":p?.method==="card"?"Swipe / Card":p?.method||"Paid"}
+
+$("loginForm").addEventListener("submit",async e=>{
+  e.preventDefault();const btn=$("loginBtn"),err=$("loginError");err.classList.add("hidden");btn.disabled=true;btn.textContent="Signing in…";
+  try{
+    const r=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`,{method:"POST",headers:{"Content-Type":"application/json",apikey:PUBLISHABLE_KEY},body:JSON.stringify({email:$("email").value.trim(),password:$("password").value})});
+    const d=await r.json();if(!r.ok)throw new Error(d.error_description||d.msg||"Invalid email or password");saveSession(d);await startApp()
+  }catch(e){localStorage.removeItem(SESSION_KEY);session=null;err.textContent=e.message;err.classList.remove("hidden")}
+  finally{btn.disabled=false;btn.textContent="Sign in"}
+});
+
+async function startApp(){
+  $("loginView").classList.add("hidden");$("appView").classList.remove("hidden");firstLoad=true;readyKnown.clear();await loadOrders();
+  if(polling)clearInterval(polling);polling=setInterval(loadOrders,4000)
+}
+async function logout(callServer=true){
+  if(polling){clearInterval(polling);polling=null}
+  if(callServer&&session?.access_token)fetch(`${SUPABASE_URL}/auth/v1/logout`,{method:"POST",headers:{apikey:PUBLISHABLE_KEY,Authorization:`Bearer ${session.access_token}`}}).catch(()=>{});
+  localStorage.removeItem(SESSION_KEY);session=null;$("appView").classList.add("hidden");$("loginView").classList.remove("hidden");$("password").value=""
+}
+async function loadOrders(){
+  try{
+    const [d,pd]=await Promise.all([apiFetch(),rpc("get_payment_module_data",{p_tenant_slug:TENANT,p_days:30}).catch(()=>null)]);
+    tenant=d.tenant;orders=d.orders||[];paymentData=pd;
+    document.documentElement.style.setProperty("--p",tenant.primary_color||"#24473F");document.documentElement.style.setProperty("--y",tenant.accent_color||"#D87750");
+    $("tenantName").textContent=tenant.name;document.title=`Front of House | ${tenant.name}`;
+    $("todayLabel").textContent=new Intl.DateTimeFormat("en-US",{weekday:"long",month:"long",day:"numeric",timeZone:tenant.timezone}).format(new Date());
+    $("staffLine").textContent=`${d.staff.email} • handoff + payment access`;
+    detectReady();render();renderDrawer();$("refreshText").textContent=`Updated ${new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit",second:"2-digit"})}`;firstLoad=false
+  }catch(e){$("refreshText").textContent=e.message}
+}
+function detectReady(){
+  const ready=orders.filter(o=>o.status==="ready").map(o=>o.id),current=new Set(ready);
+  if(!firstLoad){
+    const newReady=orders.filter(o=>o.status==="ready"&&!readyKnown.has(o.id));
+    if(newReady.length){
+      $("readyAlertNo").textContent=newReady.map(o=>callNo(o.order_number)).join(", ");$("readyAlert").classList.add("show");
+      setTimeout(()=>$("readyAlert").classList.remove("show"),8000);if(soundEnabled)beep()
+    }
+  }
+  readyKnown=current
+}
+function callNo(n){const p=String(n||"").split("-");return p[p.length-1]||n}
+function formatTime(iso){return new Intl.DateTimeFormat("en-US",{hour:"numeric",minute:"2-digit",timeZone:tenant?.timezone||"America/Aruba"}).format(new Date(iso))}
+function statusText(s){return {new:"New",confirmed:"Confirmed",preparing:"Preparing"}[s]||s}
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function itemSummary(o){return (o.items||[]).map(i=>`<div class="itemline"><b>${i.quantity}×</b> ${escapeHtml(i.item_name)}</div>`).join("")}
+function render(){
+  const ready=orders.filter(o=>o.status==="ready");
+  const progress=orders.filter(o=>["new","confirmed","preparing"].includes(o.status));
+  const paymentsOn=paymentData?.module_enabled===true;
+  $("readyOrders").innerHTML=ready.length?ready.map(o=>{
+    const p=completedPayment(o.id),paid=!!p||o.payment_status==="paid";
+    const chip=paid?`<span class="pay-chip paid ${p?.method||""}">${escapeHtml(p?payLabel(p):"Paid")}</span>`:`<span class="pay-chip unpaid">Unpaid • ${money(o.total)}</span>`;
+    const button=paymentsOn?(paid?`<button class="handoff-btn paid-handoff" onclick="completeHandoff('${o.id}','${o.fulfillment}',this)">Paid • Handed Off</button>`:`<button class="handoff-btn payment-btn" onclick="openPayment('${o.id}')">Take Payment & Hand Off</button>`):`<button class="handoff-btn" onclick="completeHandoff('${o.id}','${o.fulfillment}',this)">Handed Off</button>`;
+    const isDelivery=o.fulfillment==="delivery";
+    const readyLabel=isDelivery?"Ready for driver":"Ready to call";
+    const handoff=isDelivery
+      ? `Delivery batch <span>• ${formatTime(o.service_start)} • ${escapeHtml(o.customer_name)}</span>`
+      : `Call this number for pickup <span>• ${escapeHtml(o.customer_name)}</span>`;
+    return `<article class="ready-card ${isDelivery?"delivery":""}">
+      <div class="ready-top"><div><div class="ready-label">${readyLabel}</div><div class="call-number">${escapeHtml(callNo(o.order_number))}</div><div class="full-number">${escapeHtml(o.order_number)}</div></div><div class="ready-time">${formatTime(o.service_start)}</div></div>
+      <div class="ready-body">${chip}<div class="handoff">${handoff}</div><div class="order-summary">${itemSummary(o)}</div>${button}</div>
+    </article>`;
+  }).join(""):`<div class="empty"><strong>No orders ready right now.</strong>When the kitchen marks an order ready, it will appear here automatically.</div>`;
+  $("progressOrders").innerHTML=progress.length?progress.map(o=>`<article class="progress-card"><div class="progress-head"><div class="progress-no">${escapeHtml(callNo(o.order_number))}</div><div class="progress-time">${formatTime(o.service_start)}</div></div><span class="status ${o.status}">${statusText(o.status)}</span><div class="progress-meta">${o.fulfillment==="delivery"?"Delivery":"Pickup"} • ${escapeHtml(o.customer_name)} • ${o.payment_status==="paid"?"Paid":"Unpaid"}</div></article>`).join(""):`<div class="empty"><strong>Nothing in progress.</strong>Active orders will appear here.</div>`
+}
+
+function renderDrawer(){
+  const el=$("drawerStrip");
+  if(!paymentData?.module_enabled||!paymentData?.cash_drawer_enabled){el.classList.add("hidden");return}
+  const d=paymentData.current_drawer,pays=todayPayments(),cash=pays.filter(p=>p.method==="cash").reduce((s,p)=>s+Number(p.amount||0),0),card=pays.filter(p=>p.method==="card").reduce((s,p)=>s+Number(p.amount||0),0);
+  if(!d){const today=(paymentData.drawers||[]).filter(x=>x.business_date===paymentData.business_date),next=today.reduce((m,x)=>Math.max(m,Number(x.session_number||0)),0)+1;el.innerHTML=`<div><b>No till is open.</b><div class="staff-line">${today.length?`${today.length} till session${today.length===1?"":"s"} closed today. Open Till #${next} to continue payments.`:"Open Till #1 before taking payments."}</div></div><div class="drawer-actions"><button class="btn btn-primary" onclick="openDrawer()">Open Till #${next}</button></div>`;}
+  else if(d.status==="closed")el.innerHTML=`<div class="drawer-stats"><div class="drawer-stat"><small>Drawer</small><b>Closed</b></div><div class="drawer-stat"><small>Cash sales</small><b>${money(cash)}</b></div><div class="drawer-stat"><small>Swipe</small><b>${money(card)}</b></div><div class="drawer-stat"><small>Over / short</small><b>${money(d.over_short||0)}</b></div></div><div></div>`;
+  else{const expected=Number(d.calculated_expected_cash??d.opening_cash??0);el.innerHTML=`<div class="drawer-stats"><div class="drawer-stat"><small>Till</small><b>#${d.session_number} Open</b></div><div class="drawer-stat"><small>Opening</small><b>${money(d.opening_cash)}</b></div><div class="drawer-stat"><small>Cash sales</small><b>${money(cash)}</b></div><div class="drawer-stat"><small>Swipe</small><b>${money(card)}</b></div><div class="drawer-stat"><small>Expected cash</small><b>${money(expected)}</b></div></div><div class="drawer-actions"><button class="btn btn-light" onclick="adjustDrawer()">Cash in/out</button><button class="btn btn-light" onclick="closeDrawer()">Close Till #${d.session_number}</button></div>`}
+  el.classList.remove("hidden")
+}
+async function openDrawer(){const v=prompt("Opening cash / starting float for the next till (Afl.)","0.00");if(v===null)return;const n=Number(v);if(!Number.isFinite(n)||n<0)return alert("Enter a valid opening amount.");try{await rpc("open_cash_drawer",{p_tenant_slug:TENANT,p_opening_cash:n});await loadOrders()}catch(e){alert(e.message)}}
+async function adjustDrawer(){const type=prompt('Type "in" to add cash or "out" to remove cash:','out');if(!type)return;const entry=type.toLowerCase().startsWith("i")?"cash_in":type.toLowerCase().startsWith("o")?"cash_out":null;if(!entry)return alert('Use "in" or "out".');const amount=Number(prompt("Amount (Afl.)","0.00"));if(!Number.isFinite(amount)||amount<=0)return alert("Enter a valid amount.");const reason=prompt("Reason:","");if(!reason)return;try{await rpc("add_cash_drawer_entry",{p_tenant_slug:TENANT,p_entry_type:entry,p_amount:amount,p_reason:reason});await loadOrders()}catch(e){alert(e.message)}}
+async function closeDrawer(){const d=paymentData?.current_drawer;if(!d||d.status!=="open")return;const expected=Number(d.calculated_expected_cash??d.opening_cash??0),v=prompt(`Count actual cash for Till #${d.session_number}. Expected: ${money(expected)}`,expected.toFixed(2));if(v===null)return;const actual=Number(v);if(!Number.isFinite(actual)||actual<0)return alert("Enter a valid cash count.");const notes=prompt("Closing note (optional):","");if(!confirm(`Close drawer?\\nExpected: ${money(expected)}\\nActual: ${money(actual)}\\nDifference: ${money(actual-expected)}`))return;try{await rpc("close_cash_drawer",{p_tenant_slug:TENANT,p_actual_cash:actual,p_notes:notes||null});await loadOrders()}catch(e){alert(e.message)}}
+function closePayModal(){$("payModalRoot").innerHTML=""}
+function setPayMethod(m){payMethod=m;document.querySelectorAll(".pay-method").forEach(x=>x.classList.toggle("on",x.dataset.method===m));$("cashFields").classList.toggle("hidden",m!=="cash");$("cardFields").classList.toggle("hidden",m!=="card");updateChange()}
+function updateChange(){const oid=$("payOrderId")?.value,o=orders.find(x=>x.id===oid);if(!o)return;const cash=Number($("cashReceived")?.value||0),change=Math.max(0,cash-Number(o.total||0));$("changeValue").textContent=money(change)}
+function openPayment(orderId){const o=orders.find(x=>x.id===orderId);if(!o)return;payMethod="cash";$("payModalRoot").innerHTML=`<div class="pay-modal-back" onclick="if(event.target===this)closePayModal()"><div class="pay-modal"><div class="pay-modal-head"><div><div class="eyebrow">Payment</div><h3>${escapeHtml(o.order_number)} • ${money(o.total)}</h3></div><button class="btn btn-light" onclick="closePayModal()">✕</button></div><div class="pay-modal-body"><input id="payOrderId" type="hidden" value="${o.id}"><div class="pay-methods"><button class="pay-method on" data-method="cash" onclick="setPayMethod('cash')">💵 Cash<br><small>Cash received + change</small></button><button class="pay-method" data-method="card" onclick="setPayMethod('card')">💳 Swipe / Card<br><small>Card terminal payment</small></button></div><div id="cashFields"><label>Cash received</label><input id="cashReceived" type="number" step=".01" min="${Number(o.total).toFixed(2)}" value="${Number(o.total).toFixed(2)}" oninput="updateChange()"><div class="change-box"><small>Change to customer</small><strong id="changeValue">${money(0)}</strong></div></div><div id="cardFields" class="hidden"><label>Card reference <small>(optional)</small></label><input id="cardReference" placeholder="Receipt / terminal reference"></div></div><div class="pay-modal-foot"><button class="btn btn-light" onclick="closePayModal()">Cancel</button><button id="payHandoffBtn" class="btn btn-primary" onclick="payAndHandoff('${o.id}')">Pay & Hand Off</button></div></div></div>`}
+async function payAndHandoff(orderId){const o=orders.find(x=>x.id===orderId),btn=$("payHandoffBtn");if(!o)return;btn.disabled=true;btn.textContent="Recording…";try{const tender=payMethod==="cash"?Number($("cashReceived").value):null;if(payMethod==="cash"&&(!Number.isFinite(tender)||tender<Number(o.total)))throw new Error("Cash received must cover the order total.");await rpc("record_order_payment",{p_tenant_slug:TENANT,p_order_id:orderId,p_method:payMethod,p_amount_tendered:tender,p_reference:payMethod==="card"?$("cardReference").value.trim()||null:null});await apiFetch({method:"POST",body:JSON.stringify({action:"status",order_id:orderId,status:"completed"})});closePayModal();await loadOrders()}catch(e){alert(e.message);btn.disabled=false;btn.textContent="Pay & Hand Off"}}
+
+async function completeHandoff(orderId,fulfillment,btn){
+  const original=btn.textContent;
+  btn.disabled=true;
+  btn.textContent="Updating…";
+  const nextStatus=fulfillment==="delivery"?"out_for_delivery":"completed";
+  try{
+    await apiFetch({method:"POST",body:JSON.stringify({action:"status",order_id:orderId,status:nextStatus})});
+    await loadOrders();
+  }catch(e){
+    alert(e.message);
+    btn.disabled=false;
+    btn.textContent=original;
+  }
+}
+function toggleSound(){
+  soundEnabled=!soundEnabled;if(soundEnabled){audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==="suspended")audioCtx.resume();beep()}
+  $("soundBtn").innerHTML=soundEnabled?'🔔 <span class="btn-label">Sound on</span>':'🔕 <span class="btn-label">Enable sound</span>'
+}
+function beep(){if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=740;g.gain.value=.08;o.start();g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.45);o.stop(audioCtx.currentTime+.46)}
+(async function boot(){if(readSession()){try{await startApp();return}catch{}}$("loginView").classList.remove("hidden")})();
+</script>
+</body>
+</html>

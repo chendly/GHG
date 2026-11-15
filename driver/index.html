@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#24473F">
+<title>Driver | Gordo Hospitality Group</title>
+<style>
+:root{
+  --p:#24473F;--y:#D87750;--ink:#2D2925;--muted:#726978;--bg:#F7F1E8;
+  --card:#fff;--line:#E7DDEB;--green:#177447;--blue:#285F9E;--bluebg:#EAF3FF;
+  --shadow:0 12px 32px rgba(56,24,73,.08)
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}
+button,input,a{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.login-shell{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 20% 10%,rgba(255,217,40,.16),transparent 25%),linear-gradient(145deg,#4c126f,#7427a2)}
+.login-card{width:min(440px,100%);background:#fff;border-radius:28px;padding:30px;box-shadow:0 30px 90px rgba(20,8,27,.25)}
+.logo{width:58px;height:58px;border-radius:18px;background:var(--p);color:var(--y);display:grid;place-items:center;font-weight:950;margin-bottom:22px}
+.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:11px;font-weight:900;color:var(--p)}
+.login-card h1{font-size:34px;letter-spacing:-.04em;margin:8px 0 8px}.login-card p{color:var(--muted);line-height:1.55;margin:0 0 22px}
+label{display:block;font-weight:850;font-size:13px;margin:15px 0 7px}
+input{width:100%;border:1px solid #dcd0e2;border-radius:13px;padding:13px 14px;outline:none}
+input:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(91,27,132,.08)}
+.btn{border:0;border-radius:13px;padding:12px 16px;font-weight:900}.btn-primary{background:var(--p);color:#fff}.btn-light{background:#fff;border:1px solid var(--line);color:var(--p)}.btn-yellow{background:var(--y);color:#35163e}
+.login-card .btn-primary{width:100%;margin-top:19px;padding:14px}
+.error{background:#fff0f0;border:1px solid #efd1d1;color:#943d3d;border-radius:12px;padding:11px 13px;margin-top:14px;font-size:13px}
+header{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line)}
+.header-inner{max-width:1200px;margin:auto;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{display:flex;align-items:center;gap:12px}.mini-logo{width:43px;height:43px;border-radius:13px;background:var(--p);color:var(--y);display:grid;place-items:center;font-weight:950}
+.brand strong{display:block}.brand small{display:block;color:var(--muted);margin-top:2px}
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.live{display:flex;align-items:center;gap:7px;color:var(--green);font-size:12px;font-weight:900}.live i{width:8px;height:8px;border-radius:50%;background:#2aa45e;box-shadow:0 0 0 4px rgba(42,164,94,.12)}
+main{max-width:1200px;margin:auto;padding:18px 14px 40px}
+.title-row{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:16px}.title-row h1{font-size:31px;letter-spacing:-.04em;margin:4px 0 0}.title-row p{color:var(--muted);margin:0}
+.alert{display:none;align-items:center;justify-content:space-between;gap:15px;background:var(--y);padding:13px 15px;border-radius:15px;margin-bottom:15px;font-weight:950;box-shadow:var(--shadow)}
+.alert.show{display:flex}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}.stat{background:#fff;border:1px solid var(--line);border-radius:17px;padding:14px}.stat small{color:var(--muted);font-weight:800}.stat strong{display:block;font-size:26px;margin-top:3px}
+.section-title{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:18px 0 10px}.section-title h2{font-size:22px;margin:0}.section-title p{margin:0;color:var(--muted);font-size:13px}
+.cards{display:grid;grid-template-columns:1fr;gap:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:var(--shadow)}
+.card-top{padding:16px 16px 14px;background:var(--bluebg);display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.status-tag{font-size:11px;font-weight:950;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+.order-no{font-size:26px;font-weight:1000;line-height:1;margin-top:4px}
+.full-number{font-size:11px;color:var(--muted);margin-top:7px;font-weight:800}
+.service-time{text-align:right;font-size:18px;font-weight:950}
+.body{padding:16px}.row{display:flex;justify-content:space-between;gap:10px;margin-bottom:10px;align-items:flex-start}.row .label{font-size:11px;font-weight:950;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
+.name{font-size:16px;font-weight:950}.phone a{color:var(--p);font-weight:850;text-decoration:none}
+.address{background:#f7f3f9;border-radius:14px;padding:13px 14px;margin:10px 0 12px;font-size:14px;line-height:1.5}
+.address b{display:block;margin-bottom:4px}
+.note{background:#fff7cc;border-radius:13px;padding:12px 13px;font-size:13px;margin:10px 0 12px;color:#655315}
+.items{border-top:1px dashed #ddd1e2;padding-top:10px}.itemline{font-size:13px;padding:4px 0}.itemline b{color:var(--p)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.map-btn{display:flex;align-items:center;justify-content:center;text-decoration:none;background:#fff;border:1px solid var(--line);border-radius:13px;padding:13px 15px;font-weight:900;color:var(--p)}
+.done-btn{border:0;border-radius:13px;padding:13px 15px;font-weight:950;background:var(--p);color:#fff}
+.done-btn:disabled{opacity:.55;cursor:wait}
+.empty{text-align:center;background:#fff;border:1px dashed #d9cde0;border-radius:20px;padding:46px 20px;color:var(--muted)}
+.empty strong{display:block;color:var(--ink);font-size:20px;margin-bottom:6px}
+.history{display:grid;grid-template-columns:1fr;gap:10px}
+.history-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 15px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.history-left b{display:block}.history-left span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+.staff-line{font-size:12px;color:var(--muted);margin-top:3px}
+@media(max-width:760px){.header-inner{align-items:flex-start}.title-row{align-items:flex-start;flex-direction:column}.actions{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.order-no{font-size:22px}}
+@media(max-width:500px){main{padding:16px 11px 40px}.header-inner{padding:11px}.brand small{display:none}.btn-label{display:none}.stats{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<section id="loginView" class="login-shell">
+  <div class="login-card">
+    <div class="logo">GHG</div>
+    <div class="eyebrow">Staff access</div>
+    <h1>Delivery Driver</h1>
+    <p>Sign in to view active deliveries and mark them delivered.</p>
+    <form id="loginForm">
+      <label>Email</label>
+      <input id="email" type="email" autocomplete="username" required placeholder="staff@email.com">
+      <label>Password</label>
+      <input id="password" type="password" autocomplete="current-password" required placeholder="••••••••">
+      <button class="btn btn-primary" id="loginBtn" type="submit">Sign in</button>
+      <div id="loginError" class="error hidden"></div>
+    </form>
+  </div>
+</section>
+
+<div id="appView" class="hidden">
+<header>
+  <div class="header-inner">
+    <div class="brand"><div class="mini-logo">GHG</div><div><strong id="tenantName">Gordo Hospitality Group</strong><small>Delivery Driver</small></div></div>
+    <div class="header-actions">
+      <span class="live"><i></i> AUTO REFRESH</span>
+      <button class="btn btn-light" id="soundBtn" onclick="toggleSound()">🔔 <span class="btn-label">Enable sound</span></button>
+      <button class="btn btn-light" onclick="loadOrders()">↻ <span class="btn-label">Refresh</span></button>
+      <button class="btn btn-light" onclick="logout()">Sign out</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="title-row">
+    <div><div class="eyebrow">Driver board</div><h1>Active deliveries</h1></div>
+    <div><p id="todayLabel"></p><div class="staff-line" id="staffLine"></div></div>
+  </div>
+
+  <div class="alert" id="driverAlert"><span>🔔 New delivery assigned</span><strong id="driverAlertNo"></strong></div>
+
+  <div class="stats">
+    <div class="stat"><small>Out for delivery</small><strong id="statActive">0</strong></div>
+    <div class="stat"><small>Delivered today</small><strong id="statDelivered">0</strong></div>
+    <div class="stat"><small>Last update</small><strong id="statTime" style="font-size:18px">--:--</strong></div>
+  </div>
+
+  <div class="section-title">
+    <div><div class="eyebrow">Go now</div><h2>Orders on the road</h2></div>
+    <p id="refreshText">Waiting for deliveries…</p>
+  </div>
+  <div class="cards" id="activeOrders"></div>
+
+  <div class="section-title">
+    <div><div class="eyebrow">Completed</div><h2>Recently delivered</h2></div>
+    <p>Most recent deliveries completed today.</p>
+  </div>
+  <div class="history" id="deliveredOrders"></div>
+</main>
+</div>
+
+<script>
+const SUPABASE_URL="https://hhgzlvcdoinopqnjlcfi.supabase.co";
+const PUBLISHABLE_KEY="sb_publishable_ESxt4gggtkeRxqLB9wgUoQ_9O3Z88TG";
+const TENANT="gordo-hospitality-group";
+const API=`${SUPABASE_URL}/functions/v1/kitchen-api`;
+const SESSION_KEY=`moonlight-driver-${TENANT}`;
+let session=null,orders=[],tenant=null,polling=null,firstLoad=true,activeKnown=new Set(),soundEnabled=false,audioCtx=null;
+const $=id=>document.getElementById(id);
+
+function saveSession(d){session={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:Math.floor(Date.now()/1000)+Number(d.expires_in||3600)};localStorage.setItem(SESSION_KEY,JSON.stringify(session))}
+function readSession(){try{session=JSON.parse(localStorage.getItem(SESSION_KEY)||"null")}catch{session=null}return session}
+async function refreshSession(){
+  if(!session?.refresh_token)throw new Error("No session");
+  const r=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`,{method:"POST",headers:{"Content-Type":"application/json",apikey:PUBLISHABLE_KEY},body:JSON.stringify({refresh_token:session.refresh_token})});
+  const d=await r.json();if(!r.ok)throw new Error(d.error_description||d.msg||"Session expired");saveSession(d)
+}
+async function token(){if(!session)throw new Error("Sign in required");if((session.expires_at||0)-Math.floor(Date.now()/1000)<90)await refreshSession();return session.access_token}
+async function apiFetch(opts={}){
+  const t=await token();
+  const r=await fetch(`${API}?tenant=${encodeURIComponent(TENANT)}&screen=driver`,{
+    ...opts,
+    headers:{...(opts.headers||{}),Authorization:`Bearer ${t}`,"Content-Type":"application/json"}
+  });
+  const d=await r.json().catch(()=>({}));
+  if(r.status===401){try{await refreshSession();return apiFetch(opts)}catch{await logout(false);throw new Error("Session expired")}}
+  if(!r.ok)throw new Error(d.error||"Driver service unavailable");return d
+}
+
+$("loginForm").addEventListener("submit",async e=>{
+  e.preventDefault();const btn=$("loginBtn"),err=$("loginError");err.classList.add("hidden");btn.disabled=true;btn.textContent="Signing in…";
+  try{
+    const r=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`,{method:"POST",headers:{"Content-Type":"application/json",apikey:PUBLISHABLE_KEY},body:JSON.stringify({email:$("email").value.trim(),password:$("password").value})});
+    const d=await r.json();if(!r.ok)throw new Error(d.error_description||d.msg||"Invalid email or password");saveSession(d);await startApp()
+  }catch(e){localStorage.removeItem(SESSION_KEY);session=null;err.textContent=e.message;err.classList.remove("hidden")}
+  finally{btn.disabled=false;btn.textContent="Sign in"}
+});
+
+async function startApp(){
+  $("loginView").classList.add("hidden");$("appView").classList.remove("hidden");firstLoad=true;activeKnown.clear();await loadOrders();
+  if(polling)clearInterval(polling);polling=setInterval(loadOrders,4000)
+}
+async function logout(callServer=true){
+  if(polling){clearInterval(polling);polling=null}
+  if(callServer&&session?.access_token)fetch(`${SUPABASE_URL}/auth/v1/logout`,{method:"POST",headers:{apikey:PUBLISHABLE_KEY,Authorization:`Bearer ${session.access_token}`}}).catch(()=>{});
+  localStorage.removeItem(SESSION_KEY);session=null;$("appView").classList.add("hidden");$("loginView").classList.remove("hidden");$("password").value=""
+}
+function formatTime(iso){return new Intl.DateTimeFormat("en-US",{hour:"numeric",minute:"2-digit",timeZone:tenant?.timezone||"America/Aruba"}).format(new Date(iso))}
+function callNo(n){const p=String(n||"").split("-");return p[p.length-1]||n}
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function itemSummary(o){return (o.items||[]).map(i=>`<div class="itemline"><b>${i.quantity}×</b> ${escapeHtml(i.item_name)}</div>`).join("")}
+function mapLink(address){return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address||"")}`}
+
+async function loadOrders(){
+  try{
+    const d=await apiFetch();tenant=d.tenant;orders=d.orders||[];
+    document.documentElement.style.setProperty("--p",tenant.primary_color||"#24473F");document.documentElement.style.setProperty("--y",tenant.accent_color||"#D87750");
+    $("tenantName").textContent=tenant.name;document.title=`Driver | ${tenant.name}`;
+    $("todayLabel").textContent=new Intl.DateTimeFormat("en-US",{weekday:"long",month:"long",day:"numeric",timeZone:tenant.timezone}).format(new Date());
+    $("staffLine").textContent=`${d.staff.email} • delivery access`;
+    detectNewActive();render();$("refreshText").textContent=`Updated ${new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit",second:"2-digit"})}`;firstLoad=false
+  }catch(e){$("refreshText").textContent=e.message}
+}
+function detectNewActive(){
+  const active=orders.filter(o=>o.status==="out_for_delivery").map(o=>o.id),current=new Set(active);
+  if(!firstLoad){
+    const newActive=orders.filter(o=>o.status==="out_for_delivery"&&!activeKnown.has(o.id));
+    if(newActive.length){
+      $("driverAlertNo").textContent=newActive.map(o=>callNo(o.order_number)).join(", ");
+      $("driverAlert").classList.add("show");setTimeout(()=>$("driverAlert").classList.remove("show"),8000);if(soundEnabled)beep()
+    }
+  }
+  activeKnown=current
+}
+async function markDelivered(orderId,btn){
+  const original=btn.textContent;btn.disabled=true;btn.textContent="Updating…";
+  try{
+    await apiFetch({method:"POST",body:JSON.stringify({action:"status",order_id:orderId,status:"delivered"})});
+    await loadOrders();
+  }catch(e){
+    alert(e.message);
+    btn.disabled=false;
+    btn.textContent=original;
+  }
+}
+function render(){
+  const active=orders.filter(o=>o.status==="out_for_delivery");
+  const delivered=orders.filter(o=>o.status==="delivered").sort((a,b)=>new Date(b.updated_at)-new Date(a.updated_at)).slice(0,8);
+
+  $("statActive").textContent=active.length;
+  $("statDelivered").textContent=delivered.length;
+  $("statTime").textContent=new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
+
+  $("activeOrders").innerHTML=active.length?active.map(o=>`<article class="card">
+    <div class="card-top">
+      <div><div class="status-tag">Out for delivery</div><div class="order-no">${escapeHtml(callNo(o.order_number))}</div><div class="full-number">${escapeHtml(o.order_number)}</div></div>
+      <div class="service-time"><div>${formatTime(o.service_start)} batch</div><small style="display:block;font-size:11px;margin-top:4px">Deliver by ${formatTime(o.service_end)}</small></div>
+    </div>
+    <div class="body">
+      <div class="row">
+        <div><span class="label">Customer</span><div class="name">${escapeHtml(o.customer_name)}</div></div>
+        <div class="phone"><span class="label">Phone</span><a href="tel:${escapeHtml(o.customer_phone)}">${escapeHtml(o.customer_phone)}</a></div>
+      </div>
+      <div class="address"><b>Deliver to</b>${escapeHtml(o.delivery_address || "No address provided")}</div>
+      ${o.delivery_notes?`<div class="note"><b>Delivery note:</b> ${escapeHtml(o.delivery_notes)}</div>`:""}
+      <div class="items">${itemSummary(o)}</div>
+      <div class="actions">
+        <a class="map-btn" href="${mapLink(o.delivery_address)}" target="_blank" rel="noopener">Open in Maps</a>
+        <button class="done-btn" onclick="markDelivered('${o.id}',this)">Delivered</button>
+      </div>
+    </div>
+  </article>`).join(""):`<div class="empty"><strong>No active deliveries.</strong>When Front of House hands a delivery to the driver, it will appear here automatically.</div>`;
+
+  $("deliveredOrders").innerHTML=delivered.length?delivered.map(o=>`<div class="history-card">
+    <div class="history-left"><b>${escapeHtml(callNo(o.order_number))}</b><span>${escapeHtml(o.customer_name)} • ${formatTime(o.service_start)}</span></div>
+    <strong>Delivered</strong>
+  </div>`).join(""):`<div class="empty"><strong>No deliveries completed yet.</strong>Delivered orders will appear here.</div>`;
+}
+function toggleSound(){
+  soundEnabled=!soundEnabled;if(soundEnabled){audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==="suspended")audioCtx.resume();beep()}
+  $("soundBtn").innerHTML=soundEnabled?'🔔 <span class="btn-label">Sound on</span>':'🔕 <span class="btn-label">Enable sound</span>'
+}
+function beep(){if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=660;g.gain.value=.08;o.start();g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.45);o.stop(audioCtx.currentTime+.46)}
+(async function boot(){if(readSession()){try{await startApp();return}catch{}}$("loginView").classList.remove("hidden")})();
+</script>
+</body>
+</html>
