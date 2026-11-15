@@ -1,0 +1,72 @@
+name: Recover original published GHG website
+
+on:
+  push:
+    paths:
+      - .github/workflows/restore-published-ghg.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  restore-published-site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout unified GHG repo
+        uses: actions/checkout@v4
+
+      - name: Download EXACT October 26 published GHG site
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://6adf6bbf9861a7ea3d5d1579--ghgaruba.netlify.app'
+          mkdir -p admin kitchen front driver assets
+          files=(
+            'index.html'
+            'admin/index.html'
+            'kitchen/index.html'
+            'front/index.html'
+            'driver/index.html'
+            'assets/sako-hero.jpg'
+            'assets/sako-hero-1.jpg'
+            'assets/sako-hero-2.jpg'
+            'assets/sako-hero-3.jpg'
+          )
+          for file in "${files[@]}"; do
+            echo "Recovering $file from immutable live deployment..."
+            curl --fail --silent --show-error --location --retry 3 --connect-timeout 15 --max-time 90 \
+              "$BASE/$file" -o "$file"
+            test -s "$file"
+          done
+
+          # Source file integrity fingerprints from the original October 26
+          # Netlify Drop ZIP; do NOT commit a lookalike or later changed pages.
+          cat <<'SHA256' > original.sha256
+          91778290097b87f1fac8976bc76bf29d71a05bfe64855e83082d9a3390d80597  index.html
+          54af7c52eff37e74c3e5e50ca85ac78c06d6e0e03d8a4c53cfdec50881811cab  admin/index.html
+          f0c2d2916269b655b633017de78e66e16e05bb3f543a1aa798aab3c3dd0533e4  kitchen/index.html
+          647306cead1690dff28256bd99265a485464e4ed6cf0a14a0e457b334192b78a  front/index.html
+          fcd99dc01d374bb3ed5c9cf0194a76383482b02090b5720f9b95835e4e821525  driver/index.html
+          1d10703747eb18e06afb3e114cfb544e178506fc793180ad7c96d0a6f3853dc4  assets/sako-hero.jpg
+          1d10703747eb18e06afb3e114cfb544e178506fc793180ad7c96d0a6f3853dc4  assets/sako-hero-1.jpg
+          cac887fe18b2240e58bd7924ed049a5cbdacd3e729e3d93ce344d32cf03bfaa8  assets/sako-hero-2.jpg
+          a3d046f51be31d6ea72fea66665e25c4d000f16323c7431ee1d288d958bfe950  assets/sako-hero-3.jpg
+          SHA256
+          sha256sum -c original.sha256
+          rm original.sha256
+
+      - name: Commit unchanged original site beside /counter/
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'GHG Source Recovery'
+          git config user.email 'actions@users.noreply.github.com'
+          git add index.html admin/index.html kitchen/index.html front/index.html driver/index.html assets
+          if git diff --cached --quiet; then
+            echo 'Already imported and byte-identical.'
+          else
+            git commit -m 'Restore byte-identical GHG live storefront and staff screens (2026-10-26)'
+            git push origin HEAD:main
+          fi
