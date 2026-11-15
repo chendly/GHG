@@ -34,6 +34,24 @@
 @media(max-width:1150px){.manual-layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.cards,.zone-grid,.staff-grid{grid-template-columns:repeat(2,1fr)}.report-grid{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.rule-grid{grid-template-columns:1fr}}
 @media(max-width:800px){.cash-hero{grid-template-columns:1fr}.cash-kpis{grid-template-columns:1fr 1fr}.overview-payment-grid{grid-template-columns:1fr 1fr}.audit-event{grid-template-columns:auto 1fr}.audit-meta{grid-column:2;text-align:left}.menu-picker{grid-template-columns:1fr}.shell{grid-template-columns:1fr}.sidebar{display:none}.mobile-nav{display:flex;position:sticky;top:0;z-index:50;background:#24112d;padding:9px;gap:6px;overflow:auto}.mobile-nav button{white-space:nowrap;background:#315E52;color:#fff;border:0;border-radius:9px;padding:8px 10px;font-size:11px;font-weight:800}.topbar{top:48px}.content{padding:14px}.stats{grid-template-columns:1fr 1fr}.cards,.zone-grid,.staff-grid,.settings-grid{grid-template-columns:1fr}.rule-fields{grid-template-columns:1fr 1fr}.live-ops{grid-template-columns:1fr}.page-head{align-items:flex-start;flex-direction:column}.detail-grid{grid-template-columns:1fr}}
 @media(max-width:480px){.stats,.report-grid{grid-template-columns:1fr}.rule-fields{grid-template-columns:1fr}.search{min-width:100%;width:100%}.color-row{grid-template-columns:1fr}}
+
+/* GHG management loyalty overview. Uses the existing management-only RPC. */
+.loyalty-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}
+.loyalty-kpi{padding:18px;border:1px solid var(--line);border-radius:17px;background:var(--card);box-shadow:var(--shadow)}
+.loyalty-kpi span{display:block;font-size:12px;color:var(--muted);font-weight:750;margin-bottom:6px}
+.loyalty-kpi strong{display:block;font-size:24px;color:var(--p);font-weight:900;line-height:1.2}
+.loyalty-kpi small{display:block;color:var(--muted);font-size:11px;margin-top:5px}
+.loyalty-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:14px 0}
+.loyalty-toolbar input{width:min(450px,100%);min-width:245px}
+.loyalty-table th,.loyalty-table td{white-space:nowrap}
+.loyalty-table td:first-child,.loyalty-table th:first-child{min-width:150px}
+.loyalty-table .l-points{font-weight:950;color:var(--p)}
+.loyalty-table .l-redeem{font-weight:950;color:#A0583B}
+.loyalty-table small{display:block;color:var(--muted);font-size:11px;font-weight:550;margin-top:3px}
+.loyalty-hint{font-size:12px;color:var(--muted);line-height:1.65}
+@media(max-width:950px){.loyalty-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.loyalty-kpis{grid-template-columns:1fr 1fr}.loyalty-kpi{padding:12px}.loyalty-kpi strong{font-size:20px}.loyalty-toolbar input{min-width:100%}}
+
 </style>
 </head>
 <body>
@@ -82,6 +100,7 @@
     <section id="page-delivery" class="page"></section>
     <section id="page-staff" class="page"></section>
     <section id="page-reports" class="page"></section>
+    <section id="page-loyalty" class="page"></section>
     <section id="page-settings" class="page"></section>
     <section id="page-activity" class="page"></section>
   </main>
@@ -98,11 +117,11 @@ const API=`${SUPABASE_URL}/functions/v1/admin-api`;
 const API2=`${SUPABASE_URL}/functions/v1/admin-v2-api`;
 const ORDERING_API=`${SUPABASE_URL}/functions/v1/ordering-api`;
 const SESSION_KEY=`moonlight-admin-${TENANT}`;
-let session=null,D=null,currentPage="overview",manualCart=[],paymentData=null,auditFilter="all",recoveryToken=null;
+let session=null,D=null,currentPage="overview",manualCart=[],paymentData=null,auditFilter="all",recoveryToken=null,loyaltyData=null,loyaltyLoading=false;
 const recoveryParams=new URLSearchParams(location.hash.replace(/^#/,""));
 if(recoveryParams.get("type")==="recovery"&&recoveryParams.get("access_token")) recoveryToken=recoveryParams.get("access_token");
 const $=id=>document.getElementById(id);
-const navItems=[["overview","Overview"],["orders","Orders"],["cash","Cash Drawer"],["manual","New Order"],["history","Order History"],["menu","Menu"],["availability","Availability"],["staff","Staff & Access"],["reports","Reports"],["settings","Settings"],["activity","Activity Log"]];
+const navItems=[["overview","Overview"],["orders","Orders"],["cash","Cash Drawer"],["manual","New Order"],["history","Order History"],["menu","Menu"],["availability","Availability"],["staff","Staff & Access"],["reports","Reports"],["loyalty","Customer Loyalty"],["settings","Settings"],["activity","Activity Log"]];
 
 function saveSession(d){session={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:Math.floor(Date.now()/1000)+Number(d.expires_in||3600)};localStorage.setItem(SESSION_KEY,JSON.stringify(session))}
 function readSession(){try{session=JSON.parse(localStorage.getItem(SESSION_KEY)||"null")}catch{session=null}return session}
@@ -212,7 +231,7 @@ function toast(msg){$("toast").textContent=msg;$("toast").classList.remove("hidd
 function closeModal(){$("modalRoot").innerHTML=""}
 function modal(title,body,foot=""){$("modalRoot").innerHTML=`<div class="modal-back" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><h3>${title}</h3><button class="btn light small" onclick="closeModal()">✕</button></div><div class="modal-body">${body}</div>${foot?`<div class="modal-foot">${foot}</div>`:""}</div></div>`}
 function buildNav(){const mk=(id,label)=>`<button data-page="${id}" onclick="showPage('${id}')">${label}</button>`;$("nav").innerHTML=navItems.map(x=>mk(...x)).join("")+`<div class="sep"></div><a class="btn light small" href="/kitchen/" target="_blank">Kitchen ↗</a><a class="btn light small" href="/front/" target="_blank">Front ↗</a><a class="btn light small" href="/driver/" target="_blank">Driver ↗</a>`;$("mobileNav").innerHTML=navItems.map(x=>mk(...x)).join("")}
-function showPage(id){currentPage=id;document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));$(`page-${id}`).classList.add("active");document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===id));$("topTitle").textContent=navItems.find(x=>x[0]===id)?.[1]||id;renderPage(id)}
+function showPage(id){currentPage=id;document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));$(`page-${id}`).classList.add("active");document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===id));$("topTitle").textContent=navItems.find(x=>x[0]===id)?.[1]||id;renderPage(id);if(id==="loyalty")void loadLoyaltyOverview()}
 function setLoginMessage(type,message){
   const err=$("loginError"),ok=$("loginSuccess");
   err.classList.add("hidden");ok.classList.add("hidden");
@@ -281,9 +300,9 @@ $("recoveryForm").addEventListener("submit",saveRecoveredPassword);
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();const btn=$("loginBtn"),err=$("loginError");err.classList.add("hidden");btn.disabled=true;btn.textContent="Signing in…";try{const r=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`,{method:"POST",headers:{"Content-Type":"application/json",apikey:PUBLISHABLE_KEY},body:JSON.stringify({email:$("email").value.trim(),password:$("password").value})});const d=await r.json();if(!r.ok)throw Error(d.error_description||d.msg||"Invalid login");saveSession(d);await start()}catch(e){localStorage.removeItem(SESSION_KEY);session=null;err.textContent=e.message;err.classList.remove("hidden")}finally{btn.disabled=false;btn.textContent="Sign in"}})
 async function start(){$("loginView").classList.add("hidden");$("appView").classList.remove("hidden");buildNav();await loadAll();showPage(currentPage)}
 async function logout(callServer=true){if(callServer&&session?.access_token)fetch(`${SUPABASE_URL}/auth/v1/logout`,{method:"POST",headers:{apikey:PUBLISHABLE_KEY,Authorization:`Bearer ${session.access_token}`}}).catch(()=>{});localStorage.removeItem(SESSION_KEY);session=null;$("appView").classList.add("hidden");$("loginView").classList.remove("hidden");$("password").value=""}
-async function loadAll(render=true){try{const [main,extras,payments]=await Promise.all([api(),api2(),rpc("get_payment_module_data",{p_tenant_slug:TENANT,p_days:120}).catch(()=>null)]);D=main;D.blocked_dates=extras.blocked_dates||[];paymentData=payments;D.payment_module=payments;document.documentElement.style.setProperty("--p",D.tenant.primary_color||"#24473F");document.documentElement.style.setProperty("--y",D.tenant.accent_color||"#D87750");$("sideName").textContent=D.tenant.name;$("footProjectName").textContent=D.tenant.name;$("topUser").textContent=`${D.staff_user.email} • ${D.staff_user.role}`;document.title=`Management | ${D.tenant.name}`;if(render)renderAll();else renderPage(currentPage)}catch(e){toast(e.message);if(String(e.message).includes("access"))logout(false)}}
+async function loadAll(render=true){try{const [main,extras,payments]=await Promise.all([api(),api2(),rpc("get_payment_module_data",{p_tenant_slug:TENANT,p_days:120}).catch(()=>null)]);D=main;D.blocked_dates=extras.blocked_dates||[];paymentData=payments;D.payment_module=payments;document.documentElement.style.setProperty("--p",D.tenant.primary_color||"#24473F");document.documentElement.style.setProperty("--y",D.tenant.accent_color||"#D87750");$("sideName").textContent=D.tenant.name;$("footProjectName").textContent=D.tenant.name;$("topUser").textContent=`${D.staff_user.email} • ${D.staff_user.role}`;document.title=`Management | ${D.tenant.name}`;if(render)renderAll();else renderPage(currentPage);if(currentPage==="loyalty")void loadLoyaltyOverview()}catch(e){toast(e.message);if(String(e.message).includes("access"))logout(false)}}
 function renderAll(){navItems.forEach(x=>renderPage(x[0]))}
-function renderPage(id){({overview:renderOverview,orders:renderOrders,cash:renderCashDrawer,manual:renderManualOrder,history:renderHistory,menu:renderMenu,availability:renderAvailability,delivery:renderDelivery,staff:renderStaff,reports:renderReports,settings:renderSettings,activity:renderActivity}[id]||(()=>{}))()}
+function renderPage(id){({overview:renderOverview,orders:renderOrders,cash:renderCashDrawer,manual:renderManualOrder,history:renderHistory,menu:renderMenu,availability:renderAvailability,delivery:renderDelivery,staff:renderStaff,reports:renderReports,loyalty:renderLoyalty,settings:renderSettings,activity:renderActivity}[id]||(()=>{}))()}
 
 function orderItems(orderId){return D.order_items.filter(x=>x.order_id===orderId)}
 function itemOpts(itemId){return D.order_item_options.filter(x=>x.order_item_id===itemId)}
@@ -413,6 +432,95 @@ async function saveStaff(id){await action2("staff_update_v2",{id,role:$(`sr-${id
 
 function durationBetween(o,from,to){const h=orderHistory(o.id),a=h.find(x=>x.status===from),b=h.find(x=>x.status===to);return a&&b?(new Date(b.created_at)-new Date(a.created_at))/60000:null}
 function renderReports(){const good=D.orders.filter(o=>o.status!=="cancelled"),last30=good.filter(o=>(Date.now()-new Date(o.created_at))/86400000<=30),sales30=last30.reduce((s,o)=>s+Number(o.total||0),0),cancel=D.orders.filter(o=>o.status==="cancelled");const pay30=(paymentData?.payments||[]).filter(p=>p.status==="completed"&&(Date.now()-new Date(p.received_at))/86400000<=30),cash30=pay30.filter(p=>p.method==="cash").reduce((s,p)=>s+Number(p.amount||0),0),card30=pay30.filter(p=>p.method==="card").reduce((s,p)=>s+Number(p.amount||0),0);const itemCounts={};good.forEach(o=>orderItems(o.id).forEach(i=>itemCounts[i.item_name]=(itemCounts[i.item_name]||0)+Number(i.quantity||0)));const ranked=Object.entries(itemCounts).sort((a,b)=>b[1]-a[1]).slice(0,8);const prep=good.map(o=>durationBetween(o,"preparing","ready")).filter(x=>x!=null&&x>=0),avgPrep=prep.length?prep.reduce((a,b)=>a+b,0)/prep.length:0;const handoff=good.filter(o=>o.fulfillment==="pickup").map(o=>durationBetween(o,"ready","completed")).filter(x=>x!=null&&x>=0),avgHand=handoff.length?handoff.reduce((a,b)=>a+b,0)/handoff.length:0;const delivery=good.filter(o=>o.fulfillment==="delivery").map(o=>durationBetween(o,"out_for_delivery","delivered")).filter(x=>x!=null&&x>=0),avgDelivery=delivery.length?delivery.reduce((a,b)=>a+b,0)/delivery.length:0;const sourceCounts={};D.orders.forEach(o=>sourceCounts[o.source||"web"]=(sourceCounts[o.source||"web"]||0)+1);const cancelRate=D.orders.length?cancel.length/D.orders.length*100:0;$("page-reports").innerHTML=`<div class="page-head"><div><div class="eyebrow">Performance</div><h2>Reports</h2><p>Sales, order sources and operational timing from the live workflow.</p></div><button class="btn light" onclick="exportHistory()">Export order CSV</button></div><div class="report-grid"><div class="report-card"><span class="muted tiny">30-day sales</span><strong>${money(sales30)}</strong></div><div class="report-card"><span class="muted tiny">30-day orders</span><strong>${last30.length}</strong></div><div class="report-card"><span class="muted tiny">30-day cash</span><strong>${money(cash30)}</strong></div><div class="report-card"><span class="muted tiny">30-day swipe</span><strong>${money(card30)}</strong></div><div class="report-card"><span class="muted tiny">Avg kitchen prep</span><strong>${avgPrep?avgPrep.toFixed(1)+" min":"—"}</strong></div><div class="report-card"><span class="muted tiny">Avg delivery time</span><strong>${avgDelivery?avgDelivery.toFixed(1)+" min":"—"}</strong></div><div class="report-card"><span class="muted tiny">Avg ready → pickup</span><strong>${avgHand?avgHand.toFixed(1)+" min":"—"}</strong></div><div class="report-card"><span class="muted tiny">Cancellation rate</span><strong>${cancelRate.toFixed(1)}%</strong></div></div><div class="grid2"><div class="panel"><h3>Order source</h3><div class="rank">${Object.entries(sourceCounts).sort((a,b)=>b[1]-a[1]).map(([n,q])=>`<div class="rank-row"><span><span class="source-chip">${esc(n)}</span></span><b>${q}</b></div>`).join("")||`<div class="muted tiny">No orders yet.</div>`}</div><h3 style="margin-top:18px">Best-selling items</h3><div class="rank">${ranked.map(([n,q])=>`<div class="rank-row"><span>${esc(n)}</span><b>${q}</b></div>`).join("")||`<div class="muted tiny">More completed orders are needed for ranking.</div>`}</div></div><div class="panel"><h3>Cancellations</h3><div class="rank">${cancel.slice(0,10).map(o=>`<div class="rank-row clickrow" onclick="openOrder('${o.id}')"><span>${esc(o.order_number)}</span><b>${esc(orderNotes(o.id).find(n=>n.note_type==="cancellation")?.note||"No reason")}</b></div>`).join("")||`<div class="muted tiny">No cancellations recorded.</div>`}</div></div></div>`}
+
+/* Manager-only loyalty overview. An authenticated manager RPC does the
+   tenant/role checks server-side. Search is local and never exposes public data. */
+function renderLoyalty(){
+ const root=$("page-loyalty");
+ root.innerHTML=
+  '<div class="page-head"><div><div class="eyebrow">Customer relationships</div>'+
+  '<h2>Customer Loyalty</h2><p>View verified paid-order points, redemptions, and available balances for GHG customers.</p></div>'+
+  '<button id="loyaltyRefresh" class="btn light" type="button" onclick="loadLoyaltyOverview()">↻ Refresh balances</button></div>'+
+  '<div class="panel"><div class="loyalty-hint"><strong>Earn:</strong> 1 point for every AWG 1 in eligible paid orders. '+
+  '<strong>Redeem:</strong> 10 points for AWG 1 off at the GHG counter with customer consent. '+
+  'Points are reserved when a reward is applied and finalized after payment; cancelled or voided rewards release their points. '+
+  'Anonymous walk-ins cannot have a personal balance.</div></div>'+
+  '<div id="loyaltyStats" class="loyalty-kpis" aria-live="polite"></div>'+
+  '<div class="panel">'+
+  '<div class="loyalty-toolbar"><div><h3 style="margin:0">Customers & balances</h3>'+
+  '<span id="loyaltyCount" class="muted tiny">No results loaded yet.</span></div>'+
+  '<input id="loyaltySearch" type="search" maxlength="100" placeholder="Search customer name or phone" oninput="filterLoyalty()" aria-label="Search customers by name or phone"></div>'+
+  '<div id="loyaltyStatus" class="muted tiny" aria-live="polite">Open this page to load customer balances.</div>'+
+  '<div class="table-wrap"><table class="loyalty-table"><thead><tr>'+
+  '<th>Customer</th><th>Phone</th><th>Paid orders</th><th>Paid spend</th>'+
+  '<th>Earned</th><th>Used / pending</th><th>Available points</th><th>Redeemable</th><th>Last paid</th>'+
+  '</tr></thead><tbody id="loyaltyRows"><tr><td colspan="9" class="muted">Loading customers…</td></tr></tbody></table></div>'+
+  '</div>';
+ if(loyaltyData)filterLoyalty();
+}
+async function loadLoyaltyOverview(){
+ if(loyaltyLoading||!$("page-loyalty"))return;
+ loyaltyLoading=true;
+ const btn=$("loyaltyRefresh"),notice=$("loyaltyStatus");
+ if(btn)btn.disabled=true;
+ if(notice)notice.textContent="Loading verified customer balances…";
+ try{
+  const result=await rpc("get_customer_loyalty",{p_tenant_slug:TENANT,p_search:null});
+  if(!result||result.enabled!==true||!Array.isArray(result.customers))throw Error("No loyalty data returned");
+  loyaltyData=result;
+  filterLoyalty();
+  if(notice)notice.textContent="Balances updated from completed payments. Reward value: "+
+   Number(result.points_per_reward)+" points = "+money(result.reward_awg)+".";
+ }catch(err){
+  loyaltyData=null;
+  const tbody=$("loyaltyRows");
+  if(tbody)tbody.innerHTML='<tr><td colspan="9" class="muted">Customer balances could not be loaded.</td></tr>';
+  if(notice)notice.textContent="Unable to load loyalty balances: "+String(err.message||err);
+ }finally{
+  loyaltyLoading=false;
+  if(btn)btn.disabled=false;
+ }
+}
+function filterLoyalty(){
+ if(!loyaltyData)return;
+ const all=loyaltyData.customers||[];
+ const q=($("loyaltySearch")?.value||"").trim().toLowerCase();
+ const rows=all.filter(c=>!q ||
+   String(c.name||"").toLowerCase().includes(q)||
+   String(c.phone||"").toLowerCase().includes(q));
+ const paidProfiles=all.filter(c=>Number(c.paid_orders||0)>0).length;
+ const totalAvailable=all.reduce((s,c)=>s+Number(c.available_points||0),0);
+ const totalEarned=all.reduce((s,c)=>s+Number(c.earned_points||0),0);
+ const redeemableValue=all.reduce((s,c)=>s+Number(c.redeemable_awg||0),0);
+ $("loyaltyStats").innerHTML=
+  '<div class="loyalty-kpi"><span>Identifiable customers</span><strong>'+all.length+'</strong><small>'+paidProfiles+' with qualifying paid orders</small></div>'+
+  '<div class="loyalty-kpi"><span>Points earned</span><strong>'+totalEarned.toLocaleString()+'</strong><small>Lifetime eligible paid orders</small></div>'+
+  '<div class="loyalty-kpi"><span>Available points</span><strong>'+totalAvailable.toLocaleString()+'</strong><small>Excludes rewards already used or reserved</small></div>'+
+  '<div class="loyalty-kpi"><span>Redeemable value</span><strong>'+money(redeemableValue)+'</strong><small>Whole AWG rewards, by individual customer</small></div>';
+ $("loyaltyCount").textContent="Showing "+rows.length+" of "+all.length+" customer profiles";
+ const body=$("loyaltyRows");
+ if(!rows.length){
+  body.innerHTML='<tr><td colspan="9" class="muted">No matching customers found.</td></tr>';
+  return;
+ }
+ body.innerHTML=rows.map(c=>{
+  const used=Number(c.redeemed_points||0);
+  const reserved=Number(c.reserved_points||0);
+  let last="—";
+  if(c.last_order_at){const date=new Date(c.last_order_at);if(!isNaN(date))last= date.toLocaleDateString("en-GB",{timeZone:"America/Aruba",day:"2-digit",month:"short",year:"numeric"});}
+  return '<tr>'+
+   '<td><b>'+esc(c.name||"Unnamed customer")+'</b><small>'+(c.enrolled?"Enrolled in loyalty":"Not yet enrolled")+'</small></td>'+
+   '<td>'+esc(c.phone||"—")+'</td>'+
+   '<td>'+Number(c.paid_orders||0)+'</td>'+
+   '<td>'+money(c.paid_spend_awg)+'</td>'+
+   '<td>'+Number(c.earned_points||0).toLocaleString()+'</td>'+
+   '<td>'+used.toLocaleString()+' used<small>'+reserved.toLocaleString()+' pending</small></td>'+
+   '<td class="l-points">'+Number(c.available_points||0).toLocaleString()+'</td>'+
+   '<td class="l-redeem">'+money(c.redeemable_awg)+'</td>'+
+   '<td>'+esc(last)+'</td>'+
+  '</tr>';
+ }).join("");
+}
 
 function renderSettings(){const t=D.tenant,l=D.location||{};$("page-settings").innerHTML=`<div class="page-head"><div><div class="eyebrow">Tenant configuration</div><h2>Settings</h2><p>Restaurant identity and operating contact details.</p></div></div><div class="settings-grid"><div class="panel"><h3>Restaurant</h3><div class="field"><label>Restaurant name</label><input id="stName" value="${esc(t.name)}"></div><div class="field"><label>Order prefix</label><input id="stPrefix" value="${esc(t.order_prefix)}"></div><div class="field"><label>Location name</label><input id="stLoc" value="${esc(l.name||"")}"></div><div class="field"><label>Address</label><input id="stAddr" value="${esc(l.address||"")}"></div><div class="field"><label>Phone</label><input id="stPhone" value="${esc(l.phone||"")}"></div></div><div class="panel"><h3>Brand colors</h3><div class="color-row"><div class="field"><label>Primary</label><input id="stP" type="color" value="${t.primary_color||"#24473F"}"></div><div class="field"><label>Secondary</label><input id="stS" type="color" value="${t.secondary_color||"#ffffff"}"></div><div class="field"><label>Accent</label><input id="stA" type="color" value="${t.accent_color||"#D87750"}"></div></div><p class="muted tiny">These colors feed the customer and staff interfaces.</p></div></div><button class="btn primary" style="margin-top:12px" onclick="saveSettings()">Save settings</button>`}
 async function saveSettings(){await action("settings_save",{name:$("stName").value,order_prefix:$("stPrefix").value,location_name:$("stLoc").value,address:$("stAddr").value,phone:$("stPhone").value,primary_color:$("stP").value,secondary_color:$("stS").value,accent_color:$("stA").value})}
