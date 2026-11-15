@@ -92,9 +92,30 @@ function choose(item){
  for(const group of (catalog.groups||[]).filter(g=>g.menu_item_id===item.id)){
   const field=document.createElement("fieldset");field.dataset.groupId=group.id;field.dataset.min=String(group.min_select||0);field.dataset.max=String(group.max_select||1);
   const legend=document.createElement("legend");legend.textContent=group.name+((group.min_select||0)>0?" • required":" • optional");field.append(legend);
+  // Optional extras always have an explicit, preselected free None choice.
+  // None is a UI control only: it is never sent as a menu option to Supabase.
+  let none=null;
+  if(Number(group.min_select||0)===0){
+   const row=document.createElement("div");row.className="option";
+   none=document.createElement("input");none.type="checkbox";none.id="none_"+group.id;
+   none.dataset.none="true";none.checked=true;
+   const l=document.createElement("label");l.htmlFor=none.id;l.textContent="None — no extras (AWG 0.00)";
+   row.append(none,l);field.append(row);
+   none.addEventListener("change",()=>{
+    const extras=Array.from(field.querySelectorAll('input[data-option="true"]'));
+    if(none.checked) extras.forEach(el=>{el.checked=false});
+    else if(!extras.some(el=>el.checked)) none.checked=true;
+   });
+  }
   for(const op of (catalog.options||[]).filter(o=>o.option_group_id===group.id)){
    const row=document.createElement("div");row.className="option";
    const box=document.createElement("input");box.type="checkbox";box.value=op.id;box.id="opt_"+op.id;
+   box.dataset.option="true";
+   if(none) box.addEventListener("change",()=>{
+    const extras=Array.from(field.querySelectorAll('input[data-option="true"]'));
+    if(box.checked) none.checked=false;
+    else if(!extras.some(el=>el.checked)) none.checked=true;
+   });
    const l=document.createElement("label");l.htmlFor=box.id;l.textContent=op.name+(Number(op.price_delta)>0?" +"+money(op.price_delta):"");
    row.append(box,l);field.append(row);
   }
@@ -109,7 +130,8 @@ $("addToCart").addEventListener("click",()=>{
  if(!Number.isInteger(qty)||qty<min||qty>20){$("choiceErr").textContent="Choose a quantity between "+min+" and 20.";return}
  const selected=[];
  for(const field of $("choices").querySelectorAll("fieldset")){
-  const checked=Array.from(field.querySelectorAll("input:checked"));
+  // Count only actual paid/required option selections, never the None control.
+  const checked=Array.from(field.querySelectorAll('input[data-option="true"]:checked'));
   if(checked.length<Number(field.dataset.min)||checked.length>Number(field.dataset.max)){
    $("choiceErr").textContent="Complete the required selections for "+field.querySelector("legend").textContent;return
   }
