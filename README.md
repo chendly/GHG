@@ -14,13 +14,14 @@ The public GHG Netlify site `ghgaruba` currently publishes deployment `6adf6bbf9
 | `/front/` | Original front of house |
 | `/driver/` | Original driver operations |
 | `/counter/` | New staff-only quick walk-in ordering and optional loyalty |
+| `/admin/` → Customer Loyalty | Manager-only searchable balances, paid orders, earned/used/available points, and redeemable AWG |
 
 **Important:** The staff counter is not a different Netlify or Supabase project. `/counter/index.html` calls the already-deployed authenticated Supabase Edge API `ghg-quick-order`. It uses the same tenant `gordo-hospitality-group` and current menu, products, order history and payment ledger.
 
 ## Counter behavior
 - Anonymous immediate walk-in order: simply tap items/options and record order. No mandatory name/email/phone.
-- Optionally record customer name and phone. With consent, optionally email, look up earned points and reserve a reward once management approves redemptions.
-- Points accrue at 1 point per eligible AWG paid. The drafted reward is 100 points for AWG 5, but **redemption stays disabled in production** until approved.
+- Optionally record customer name and phone. With consent, optionally email, look up earned points and redeem their available points when they consent at the counter.
+- Points accrue at 1 point per eligible AWG paid. The **approved live redemption rate is 10 points = AWG 1 off**; customer reward redemption is enabled, with points reserved on order entry and finalized after actual payment. Cancellation or void releases the points.
 - Orders start unpaid and must be paid through existing GHG till/payment processes, exactly as before.
 - The online storefront and its existing customer checkout are preserved as-is. Staff and customer authentication remain on their respective original routes.
 
