@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0b0b0b"><meta name="apple-mobile-web-app-capable" content="yes"><title>GHG | Walk-In Quick Order</title>
+<style>
+:root{color-scheme:dark;--bg:#0a0a0a;--panel:#171717;--line:#38342a;--gold:#d4af37;--text:#f8f4eb;--muted:#aca69c}
+*[hidden]{display:none!important}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Arial,sans-serif}main{max-width:1050px;margin:auto;padding:18px 15px 100px}header{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid var(--line);padding:14px 16px}h1{font-family:Georgia,serif;letter-spacing:.04em;color:var(--gold);margin:0;font-size:1.65rem}h2{font-size:1.1rem;margin:0 0 12px}h3{font-size:1rem}.sub{color:var(--muted);font-size:.85rem}.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,335px);gap:16px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px}button,input,select{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:#26231d;color:var(--text);padding:12px 14px;border-radius:10px;min-height:44px}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}.gold{background:var(--gold);color:#111;border-color:var(--gold);font-weight:700}.ghost{background:transparent}.danger{color:#ffb6b6}button:disabled{opacity:.5;cursor:not-allowed}input,select{width:100%;background:#252525;color:var(--text);border:1px solid #5c5751;padding:12px;border-radius:9px;min-height:45px}label{display:block;margin:10px 0 6px;font-size:.89rem;color:#e9e0cd}.row{display:flex;gap:10px;align-items:center;justify-content:space-between}.row>*{min-width:0}.items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.item{text-align:left;display:flex;flex-direction:column;gap:5px;min-height:86px;justify-content:center}.item b{font-size:.98rem}.item span{color:var(--gold);font-weight:700}.cartline{padding:12px 0;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px}.cartline small{display:block;color:var(--muted)}.muted{color:var(--muted)}.error{color:#ffb4b4}.good{color:#b9efa8}.status{padding:10px 0;min-height:35px}.wide{width:100%}.signin{max-width:420px;margin:40px auto}.summary{font-size:1.3rem;font-weight:700;margin-top:15px}.option{display:flex;gap:8px;align-items:flex-start;padding:9px 0}.option input{width:20px;height:20px;min-height:0}.option label{margin:0}dialog{width:min(94vw,480px);border:1px solid var(--gold);border-radius:18px;color:var(--text);background:var(--panel);padding:18px;max-height:86vh;overflow:auto}dialog::backdrop{background:#000b}fieldset{border:1px solid var(--line);border-radius:12px;margin:12px 0;padding:10px}legend{padding:0 6px;color:var(--gold)}@media(max-width:760px){.grid{grid-template-columns:1fr}.items{grid-template-columns:repeat(2,minmax(0,1fr))}main{padding-bottom:50px}.signin{margin:14px auto}}
+</style></head><body><header><div><h1>GHG · SAKO</h1><div class="sub">Staff walk-in ordering • Aruba</div></div><button class="ghost" id="logout" hidden>Sign out</button></header>
+<main><section id="login" class="panel signin"><h2>Staff sign in</h2><p class="sub">Use your existing GHG staff account. No new signup.</p><form id="loginForm"><label for="email">Email</label><input id="email" type="email" autocomplete="username" required><label for="pass">Password</label><input id="pass" type="password" autocomplete="current-password" required><button id="loginBtn" class="gold wide" type="submit" style="margin-top:14px">Sign in</button></form><div id="authStatus" class="status"></div></section>
+<section id="app" hidden><div class="row" style="margin-bottom:15px"><div><h2>Walk-In Quick Order</h2><span class="sub">Instant counter order • optional loyalty phone</span></div><button id="refresh">Refresh menu/times</button></div>
+<div class="grid"><div><section class="panel"><h2>Tap to add items</h2><div id="menu" class="muted">Loading current menu…</div></section><section class="panel"><h2>Customer loyalty</h2><p class="sub">Anonymous walk-ins stay anonymous. For customers who choose loyalty, check their balance with their phone number before applying any rewards.</p><div id="loyaltyResult" class="sub" aria-live="polite">No customer selected. Earn 1 point per eligible AWG paid; points appear after the sale is recorded as paid.</div></section></div>
+<div><section class="panel"><h2>Current order</h2><div id="cart" class="muted">No items added.</div><div id="total" class="summary">AWG 0.00</div><p class="sub">Immediate walk-in sale · no pickup slot selection</p><label for="customerName">Customer name <span class="muted">(optional)</span></label>
+<input id="customerName" placeholder="Leave empty for Walk-in" autocomplete="off" maxlength="120">
+<label for="customerPhone">Customer phone <span class="muted">(optional)</span></label>
+<input id="customerPhone" type="tel" inputmode="tel" autocomplete="off" placeholder="Leave empty for anonymous walk-in" maxlength="40">
+<div class="option" style="margin-top:12px">
+<input id="loyaltyConsent" type="checkbox"><label for="loyaltyConsent"><b>Customer agrees to loyalty enrollment / lookup</b><small class="sub" style="display:block">Ask the customer first. Not a marketing subscription.</small></label>
+</div>
+<div id="loyaltyControls" hidden>
+<label for="customerEmail">Email <span class="muted">(optional; for loyalty profile only)</span></label>
+<input id="customerEmail" type="email" autocomplete="off" maxlength="254" placeholder="customer@example.com">
+<button id="lookupBtn" type="button" class="ghost wide" style="margin-top:10px">Find customer / Check points</button>
+<label for="rewardCount">Redeem loyalty rewards</label>
+<select id="rewardCount" disabled><option value="0">No rewards applied</option></select>
+<p id="rewardMessage" class="sub">Look up the customer's balance to see reward options.</p>
+</div>
+<p id="discountPreview" class="sub" hidden></p>
+<button class="gold wide" style="margin-top:15px" id="submitOrder" disabled>Record walk-in order</button><p class="sub">This records a new unpaid order. Collect and record payment in the normal GHG till workflow; no payment is charged here.</p><div id="orderStatus" class="status" aria-live="polite"></div></section></div></div></section></main>
+<dialog id="choice"><div class="row"><h2 id="choiceTitle">Choose item</h2><button id="closeChoice" class="ghost" aria-label="Close">✕</button></div><div id="choicePrice" class="sub"></div><label for="qty">Quantity</label><input id="qty" type="number" min="1" max="20" value="1"><div id="choices"></div><div id="choiceErr" class="error"></div><button id="addToCart" class="gold wide" style="margin-top:10px">Add to order</button></dialog>
+<script>
+(function(){
+"use strict";
+const SB_URL="https://hhgzlvcdoinopqnjlcfi.supabase.co", KEY="sb_publishable_ESxt4gggtkeRxqLB9wgUoQ_9O3Z88TG", SLUG="gordo-hospitality-group";
+const $=id=>document.getElementById(id);
+const money=n=>"AWG "+Number(n||0).toFixed(2);
+let session=null,catalog=null,cart=[],editing=null,loyaltyQuote=null,loyaltyPhone="";
+const query=(path,opts)=>fetch(SB_URL+path,opts);
+const asJson=async r=>{const data=await r.json().catch(()=>({}));if(!r.ok)throw Error(data.error_description||data.error||data.msg||"Request failed");return data};
+const status=(el,message,error)=>{el.textContent=message;el.className="status "+(error?"error":"good")};
+async function token(){
+  if(!session)throw Error("Please sign in");
+  if((session.expires_at||0)>Date.now()/1000+45)return session.access_token;
+  const data=await asJson(await query("/auth/v1/token?grant_type=refresh_token",{method:"POST",headers:{"apikey":KEY,"Content-Type":"application/json"},body:JSON.stringify({refresh_token:session.refresh_token})}));
+  session={access_token:data.access_token,refresh_token:data.refresh_token,expires_at:Math.floor(Date.now()/1000)+data.expires_in};
+  sessionStorage.setItem("ghg_quick_session",JSON.stringify(session));
+  return session.access_token;
+}
+async function signedRequest(path,payload){
+ const auth=await token();return await asJson(await query(path,{method:"POST",headers:{"apikey":KEY,"Authorization":"Bearer "+auth,"Content-Type":"application/json"},body:JSON.stringify(payload)}))
+}
+function loggedIn(v){$("login").hidden=v;$("app").hidden=!v;$("logout").hidden=!v;if(!v){cart=[];renderCart()}}
+$("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();$("loginBtn").disabled=true;status($("authStatus"),"Signing in…",false);
+ try{
+  const data=await asJson(await query("/auth/v1/token?grant_type=password",{method:"POST",headers:{"apikey":KEY,"Content-Type":"application/json"},body:JSON.stringify({email:$("email").value.trim(),password:$("pass").value})}));
+  session={access_token:data.access_token,refresh_token:data.refresh_token,expires_at:Math.floor(Date.now()/1000)+data.expires_in};
+  sessionStorage.setItem("ghg_quick_session",JSON.stringify(session));
+  $("pass").value="";loggedIn(true);await load();
+ }catch(err){status($("authStatus"),err.message,true)}finally{$("loginBtn").disabled=false}
+});
+$("logout").addEventListener("click",()=>{session=null;sessionStorage.removeItem("ghg_quick_session");loggedIn(false);$("authStatus").textContent=""});
+$("refresh").addEventListener("click",load);
+async function load(){
+ $("menu").textContent="Loading current menu…";$("submitOrder").disabled=true;
+ try{
+  const prefix="/functions/v1/ordering-api?tenant="+encodeURIComponent(SLUG);
+  const c=await asJson(await query(prefix+"&view=store",{headers:{"apikey":KEY}}));
+  catalog=c;renderMenu();renderCart();
+ }catch(err){$("menu").textContent=err.message}
+}
+function renderMenu(){
+ const root=$("menu");root.replaceChildren();
+ const cats=catalog.categories||[],items=catalog.items||[];
+ let added=0;
+ for(const cat of cats){
+  const group=items.filter(x=>x.category_id===cat.id);
+  if(!group.length)continue;
+  const h=document.createElement("h3");h.textContent=cat.name;root.append(h);
+  const grid=document.createElement("div");grid.className="items";
+  for(const item of group){
+   const b=document.createElement("button");b.className="item";b.type="button";
+   const name=document.createElement("b");name.textContent=item.name;
+   const price=document.createElement("span");price.textContent=money(item.base_price);
+   b.append(name,price);b.addEventListener("click",()=>choose(item));grid.append(b);added++;
+  }
+  root.append(grid);
+ }
+ if(!added)root.textContent="No items in the active menu.";
+}
+function choose(item){
+ editing=item;$("choiceTitle").textContent=item.name;$("choicePrice").textContent=money(item.base_price);$("choiceErr").textContent="";
+ const min=/^1 Florin Wings$/i.test(item.name)?5:1;
+ $("qty").min=String(min);$("qty").value=String(min);$("choices").replaceChildren();
+ for(const group of (catalog.groups||[]).filter(g=>g.menu_item_id===item.id)){
+  const field=document.createElement("fieldset");field.dataset.groupId=group.id;field.dataset.min=String(group.min_select||0);field.dataset.max=String(group.max_select||1);
+  const legend=document.createElement("legend");legend.textContent=group.name+((group.min_select||0)>0?" • required":" • optional");field.append(legend);
+  for(const op of (catalog.options||[]).filter(o=>o.option_group_id===group.id)){
+   const row=document.createElement("div");row.className="option";
+   const box=document.createElement("input");box.type="checkbox";box.value=op.id;box.id="opt_"+op.id;
+   const l=document.createElement("label");l.htmlFor=box.id;l.textContent=op.name+(Number(op.price_delta)>0?" +"+money(op.price_delta):"");
+   row.append(box,l);field.append(row);
+  }
+  $("choices").append(field);
+ }
+ $("choice").showModal();
+}
+$("closeChoice").addEventListener("click",()=>$("choice").close());
+$("addToCart").addEventListener("click",()=>{
+ if(!editing)return;
+ const qty=Number($("qty").value),min=Number($("qty").min);
+ if(!Number.isInteger(qty)||qty<min||qty>20){$("choiceErr").textContent="Choose a quantity between "+min+" and 20.";return}
+ const selected=[];
+ for(const field of $("choices").querySelectorAll("fieldset")){
+  const checked=Array.from(field.querySelectorAll("input:checked"));
+  if(checked.length<Number(field.dataset.min)||checked.length>Number(field.dataset.max)){
+   $("choiceErr").textContent="Complete the required selections for "+field.querySelector("legend").textContent;return
+  }
+  for(const el of checked)selected.push(el.value);
+ }
+ const item=editing,options=(catalog.options||[]).filter(op=>selected.includes(op.id));
+ const unit=Number(item.base_price||0)+options.reduce((n,o)=>n+Number(o.price_delta||0),0);
+ cart.push({item,quantity:qty,option_ids:selected,option_names:options.map(o=>o.name),unit});$("choice").close();renderCart();
+});
+function renderCart(){
+ const el=$("cart");el.replaceChildren();
+ if(!cart.length){el.textContent="No items added."}else{
+  cart.forEach((line,i)=>{
+   const row=document.createElement("div");row.className="cartline";
+   const txt=document.createElement("div");const b=document.createElement("b");b.textContent=line.quantity+" × "+line.item.name;
+   const small=document.createElement("small");small.textContent=line.option_names.join(", ");txt.append(b,small);
+   const right=document.createElement("div");const amt=document.createElement("div");amt.textContent=money(line.quantity*line.unit);
+   const del=document.createElement("button");del.type="button";del.className="ghost danger";del.textContent="Remove";del.addEventListener("click",()=>{cart.splice(i,1);renderCart()});
+   right.append(amt,del);row.append(txt,right);el.append(row);
+  });
+ }
+ const gross=cart.reduce((n,line)=>n+line.quantity*line.unit,0);
+ const rewards=Number($("rewardCount").value||0);
+ const discount=loyaltyQuote&&loyaltyQuote.redemption_enabled?rewards*Number(loyaltyQuote.reward_awg||0):0;
+ $("discountPreview").hidden=!discount;
+ $("discountPreview").textContent=discount?"Loyalty discount: -"+money(discount):"";
+ $("total").textContent=money(gross-Math.min(discount,gross));
+ $("submitOrder").disabled=!cart.length;
+ updateRewardOptions();
+}
+
+$("submitOrder").addEventListener("click",async()=>{
+ const phone=$("customerPhone").value.trim(),digits=phone.replace(/\D/g,"");
+ const consent=$("loyaltyConsent").checked;
+ if(phone&&digits.length<7){status($("orderStatus"),"A customer phone needs at least 7 digits, or leave it blank.",true);return}
+ if(consent&&!phone){status($("orderStatus"),"Enter a phone number for loyalty, or uncheck loyalty for an anonymous sale.",true);return}
+ if(!cart.length)return;
+ const rewards=Number($("rewardCount").value||0);
+ if(rewards>0&&(!loyaltyQuote||phone!==loyaltyPhone)){status($("orderStatus"),"Please recheck the customer balance first.",true);return}
+ const btn=$("submitOrder");btn.disabled=true;status($("orderStatus"),"Saving order…",false);
+ try{
+  const payload={action:"order",customer_name:$("customerName").value.trim(),customer_phone:phone,
+   customer_email:consent?$("customerEmail").value.trim():"",
+   loyalty_opt_in:consent,redeem_rewards:rewards,
+   items:cart.map(l=>({menu_item_id:l.item.id,quantity:l.quantity,option_ids:l.option_ids}))};
+  const result=await signedRequest("/functions/v1/ghg-quick-order",payload);
+  status($("orderStatus"),"Saved: "+result.order.order_number+" • "+money(result.order.total)+
+    (result.order.loyalty_discount>0?" (discount "+money(result.order.loyalty_discount)+")":"")+
+    " • unpaid. Record payment in the GHG till. Points are posted after payment.",false);
+  cart=[];$("customerName").value="";$("customerPhone").value="";$("customerEmail").value="";
+  $("loyaltyConsent").checked=false;loyaltyQuote=null;loyaltyPhone="";$("loyaltyControls").hidden=true;
+  $("loyaltyResult").textContent="No customer selected. Earn 1 point per eligible AWG paid; points appear after payment.";
+  $("rewardCount").replaceChildren(new Option("No rewards applied","0"));$("rewardCount").disabled=true;
+  await load();
+ }catch(err){status($("orderStatus"),err.message,true)}
+ finally{renderCart()}
+});
+function clearLoyalty(){
+ loyaltyQuote=null;loyaltyPhone="";
+ $("rewardCount").replaceChildren(new Option("No rewards applied","0"));
+ $("rewardCount").disabled=true;
+ $("rewardMessage").textContent="Check balance before applying rewards.";
+ $("loyaltyResult").textContent="No customer selected.";
+ renderCart();
+}
+$("customerPhone").addEventListener("input",clearLoyalty);
+$("loyaltyConsent").addEventListener("change",()=>{
+ const on=$("loyaltyConsent").checked;
+ $("loyaltyControls").hidden=!on;
+ clearLoyalty();
+});
+$("rewardCount").addEventListener("change",renderCart);
+function updateRewardOptions(){
+ if(!loyaltyQuote||!loyaltyQuote.redemption_enabled){
+  $("rewardCount").disabled=true;
+  return;
+ }
+ const gross=cart.reduce((n,line)=>n+line.quantity*line.unit,0);
+ const max=Math.min(100,Number(loyaltyQuote.max_rewards||0),
+   Math.max(0,Math.floor((gross-0.01)/Number(loyaltyQuote.reward_awg||1))));
+ const sel=$("rewardCount"),selected=Math.min(Number(sel.value||0),max);
+ if(sel.options.length!==max+1){
+  sel.replaceChildren(new Option("No rewards applied","0"));
+  for(let k=1;k<=max;k++){
+   sel.add(new Option(k+" reward"+(k>1?"s":"")+" • "+(k*loyaltyQuote.points_per_reward)+" points → "+money(k*loyaltyQuote.reward_awg),String(k)));
+  }
+ }
+ sel.disabled=max===0;sel.value=String(selected);
+}
+$("lookupBtn").addEventListener("click",async()=>{
+ const phone=$("customerPhone").value.trim();
+ if(!$("loyaltyConsent").checked){$("loyaltyResult").textContent="Ask the customer first and check loyalty consent.";return}
+ if(phone.replace(/\D/g,"").length<7){$("loyaltyResult").textContent="Enter a valid phone number to look up points.";return}
+ const btn=$("lookupBtn");btn.disabled=true;$("loyaltyResult").textContent="Checking this customer's loyalty balance…";
+ try{
+  const response=await signedRequest("/functions/v1/ghg-quick-order",{
+   action:"lookup",customer_phone:phone,customer_consented:true
+  });
+  const result=response.loyalty;loyaltyQuote=result;loyaltyPhone=phone;
+  $("loyaltyResult").textContent=(result.found?(result.name||"Returning customer"):"New loyalty customer")+
+   " • "+result.available_points+" available points"+
+   " • "+result.paid_orders+" qualifying paid order(s).";
+  // Show the recognized name in lookup only; do not silently fill or change order customer details.
+  if(result.redemption_enabled){
+   $("rewardMessage").textContent="Redeem "+result.points_per_reward+" points for "+
+    money(result.reward_awg)+". Customer must agree to redeem.";
+  }else{
+   $("rewardMessage").textContent="Rewards are not enabled yet. Points can be collected after payment.";
+  }
+  updateRewardOptions();renderCart();
+ }catch(err){clearLoyalty();$("loyaltyResult").textContent=err.message}
+ finally{btn.disabled=false}
+});
+try{session=JSON.parse(sessionStorage.getItem("ghg_quick_session")||"null")}catch{session=null}
+if(session){loggedIn(true);load()}else{loggedIn(false)}
+})();
+</script></body></html>
